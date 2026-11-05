@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ review.title }}{% endblock %}
+
+{% block content %}
+<article class="card detail">
+    <div class="card-top">
+        <a class="book-link" href="{% url 'book_detail' review.book.pk %}">{{ review.book.title }}</a>
+        <span class="muted">· {{ review.book.author }}{% if review.book.year %}, {{ review.book.year }}{% endif %}</span>
+        {% if review.book.genre %}<span class="tag">{{ review.book.genre.name }}</span>{% endif %}
+    </div>
+
+    <h1>{{ review.title }}</h1>
+    <div class="meta">
+        {% with name=review.author.first_name|default:review.author.username %}
+        <a class="author" href="{% url 'profile' review.author.username %}">
+            <span class="avatar">{{ name|first|upper }}</span>{{ name }}
+        </a>
+        {% endwith %}
+        <span class="stars big">{{ review.stars }}</span>
+        <span class="muted">{{ review.get_rating_display }}</span>
+        <span class="muted">{{ review.created_at|date:"d.m.Y H:i" }}</span>
+    </div>
+
+    <div class="review-text">{{ review.text|linebreaks }}</div>
+
+    {% include "reviews/_reactions.html" %}
+
+    {% if user == review.author %}
+        <div class="owner-actions">
+            <a class="btn ghost" href="{% url 'review_edit' review.pk %}">Править</a>
+            <a class="btn danger" href="{% url 'review_delete' review.pk %}">Удалить</a>
+        </div>
+    {% endif %}
+</article>
+<p class="back"><a href="{% url 'feed' %}">← К ленте</a></p>
+{% endblock %}

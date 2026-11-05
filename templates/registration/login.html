@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<h1>Вход на сайт</h1>
+<p class="hint">Введите логин и пароль.</p>
+<form method="post" class="card form-card">
+    {% csrf_token %}
+    {% include "reviews/_form.html" %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="btn" type="submit">Войти</button>
+</form>
+<p class="hint">Ещё нет аккаунта? <a href="{% url 'signup' %}">Зарегистрируйтесь</a>.</p>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ heading }}{% endblock %}
+
+{% block content %}
+<h1>{{ heading }}</h1>
+<form method="post" class="card form-card">
+    {% csrf_token %}
+    {% include "reviews/_form.html" %}
+    <button class="btn" type="submit">Сохранить</button>
+</form>
+<p class="hint">Нет нужной книги в списке? <a href="{% url 'book_add' %}">Добавьте её</a>.</p>
+{% endblock %}

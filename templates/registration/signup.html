@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<h1>Регистрация</h1>
+<p class="hint">Придумайте логин, пароль и повторите пароль. После регистрации мы сразу вас залогиним.</p>
+<form method="post" class="card form-card">
+    {% csrf_token %}
+    {% include "reviews/_form.html" %}
+    <button class="btn" type="submit">Зарегистрироваться</button>
+</form>
+<p class="hint">Уже есть аккаунт? <a href="{% url 'login' %}">Войдите</a>.</p>
+{% endblock %}

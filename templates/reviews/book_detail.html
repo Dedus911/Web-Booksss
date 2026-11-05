@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="card book-head">
+    <h1>{{ book.title }}</h1>
+    <p class="muted">
+        {{ book.author }}{% if book.year %} · {{ book.year }}{% endif %}{% if book.genre %} · {{ book.genre.name }}{% endif %}
+    </p>
+    {% if book.description %}<p>{{ book.description|linebreaks }}</p>{% endif %}
+    <p class="muted">Рецензий: {{ reviews|length }}</p>
+    {% if user.is_authenticated %}
+        <a class="btn" href="{% url 'review_add' %}?book={{ book.pk }}">Написать рецензию на эту книгу</a>
+    {% else %}
+        <a href="{% url 'login' %}">Войдите</a>, чтобы написать рецензию.
+    {% endif %}
+</div>
+
+<h2 class="section-title">Рецензии читателей</h2>
+{% for review in reviews %}
+    {% include "reviews/_review_card.html" %}
+{% empty %}
+    <div class="empty">Про эту книгу ещё никто не написал. Будете первым?</div>
+{% endfor %}
+<p class="back"><a href="{% url 'feed' %}">← К ленте</a></p>
+{% endblock %}

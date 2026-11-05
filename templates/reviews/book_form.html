@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Добавить книгу{% endblock %}
+
+{% block content %}
+<h1>Добавить книгу</h1>
+<p class="hint">Если книги ещё нет в списке, заведите её здесь. После сохранения сразу откроется форма рецензии.</p>
+<form method="post" class="card form-card">
+    {% csrf_token %}
+    {% include "reviews/_form.html" %}
+    <button class="btn" type="submit">Добавить книгу</button>
+</form>
+{% endblock %}

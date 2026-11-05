@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Профиль: {{ person.first_name|default:person.username }}{% endblock %}
+
+{% block content %}
+{% with name=person.first_name|default:person.username %}
+<div class="card profile-head">
+    <div class="avatar big-avatar">{{ name|first|upper }}</div>
+    <div class="profile-info">
+        <h1>{{ name }}</h1>
+        <p class="muted">На сайте с {{ person.date_joined|date:"d.m.Y" }}</p>
+        {% if person_profile.bio %}
+            <p>{{ person_profile.bio|linebreaks }}</p>
+        {% else %}
+            <p class="muted">Пока ничего о себе не рассказал.</p>
+        {% endif %}
+        {% if person_profile.favorite_genre %}
+            <span class="tag">Любимый жанр: {{ person_profile.favorite_genre.name }}</span>
+        {% endif %}
+    </div>
+    {% if user == person %}
+        <a class="btn ghost" href="{% url 'profile_edit' %}">Редактировать</a>
+    {% endif %}
+</div>
+
+<div class="stats">
+    <div><strong>{{ reviews_count }}</strong><span>рецензий</span></div>
+    <div><strong>{{ likes_got }}</strong><span>лайков получено</span></div>
+    <div><strong>{{ dislikes_got }}</strong><span>дизлайков получено</span></div>
+</div>
+
+<h2 class="section-title">Рецензии: {{ name }}</h2>
+{% for review in reviews %}
+    {% include "reviews/_review_card.html" %}
+{% empty %}
+    <div class="empty">
+        Рецензий пока нет.
+        {% if user == person %}<a href="{% url 'review_add' %}">Написать первую</a>{% endif %}
+    </div>
+{% endfor %}
+{% endwith %}
+{% endblock %}

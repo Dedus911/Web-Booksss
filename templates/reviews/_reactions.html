@@ -1,0 +1,23 @@
+<!-- Каждая кнопка — маленькая форма. Нажал — страница обновилась, оценка записалась. -->
+<div class="reactions">
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'react' review.pk 'like' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="react {% if review.i_liked %}on-like{% endif %}">
+                👍 {{ review.likes_count }}
+            </button>
+        </form>
+        <form method="post" action="{% url 'react' review.pk 'dislike' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="react {% if review.i_disliked %}on-dislike{% endif %}">
+                👎 {{ review.dislikes_count }}
+            </button>
+        </form>
+    {% else %}
+        <span class="react static">👍 {{ review.likes_count }}</span>
+        <span class="react static">👎 {{ review.dislikes_count }}</span>
+        <a class="hint" href="{% url 'login' %}">войдите, чтобы оценить</a>
+    {% endif %}
+</div>

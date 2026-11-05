@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Лента рецензий · КнигоМнение{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Что читать дальше?</h1>
+    <p>Живые рецензии на книги от таких же читателей. Оценивайте чужое мнение и делитесь своим.</p>
+    {% if user.is_authenticated %}
+        <a class="btn" href="{% url 'review_add' %}">Написать рецензию</a>
+    {% else %}
+        <p class="call"><a href="{% url 'signup' %}">Зарегистрируйтесь</a>, чтобы писать рецензии и ставить лайки.</p>
+    {% endif %}
+</section>
+
+<form class="filters" method="get" action="{% url 'feed' %}">
+    <input type="search" name="q" value="{{ q }}" placeholder="Книга, автор или заголовок">
+    <select name="genre">
+        <option value="">Все жанры</option>
+        {% for g in genres %}
+            <option value="{{ g.pk }}" {% if genre == g.pk|stringformat:"s" %}selected{% endif %}>{{ g.name }}</option>
+        {% endfor %}
+    </select>
+    <select name="sort">
+        <option value="new" {% if sort == 'new' %}selected{% endif %}>Сначала новые</option>
+        <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Сначала с высокой оценкой</option>
+    </select>
+    <button class="btn" type="submit">Показать</button>
+</form>
+
+<h2 class="section-title">Лента</h2>
+{% for review in page %}
+    {% include "reviews/_review_card.html" %}
+{% empty %}
+    <div class="empty">
+        Пока ничего не нашлось. Попробуйте другой запрос или
+        <a href="{% url 'review_add' %}">напишите первую рецензию</a>.
+    </div>
+{% endfor %}
+
+{% if page.has_other_pages %}
+    <nav class="pager">
+        {% if page.has_previous %}
+            <a href="?q={{ q|urlencode }}&amp;genre={{ genre }}&amp;sort={{ sort }}&amp;page={{ page.previous_page_number }}">← Назад</a>
+        {% endif %}
+        <span>Страница {{ page.number }} из {{ page.paginator.num_pages }}</span>
+        {% if page.has_next %}
+            <a href="?q={{ q|urlencode }}&amp;genre={{ genre }}&amp;sort={{ sort }}&amp;page={{ page.next_page_number }}">Вперёд →</a>
+        {% endif %}
+    </nav>
+{% endif %}
+{% endblock %}

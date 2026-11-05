@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Удаление рецензии{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Точно удалить?</h1>
+    <p>Рецензия «{{ review.title }}» исчезнет вместе со всеми лайками. Отменить это будет нельзя.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn danger" type="submit">Да, удалить</button>
+        <a class="btn ghost" href="{% url 'review_detail' review.pk %}">Оставить</a>
+    </form>
+</div>
+{% endblock %}
